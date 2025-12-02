@@ -10,8 +10,16 @@ fun solution(input: String): Long {
         for (i in start..end) {
             val str = i.toString()
             val len = str.length
-            if (len % 2 == 0 && str.take(len/2) == str.substring(len/2)) {
-                result += i
+            if (len == 1) continue
+            for (j in 2..len) {
+                if (len % j == 0) {
+                    val partSize = len / j
+                    val chunks = str.chunked(partSize)
+                    if (chunks.distinct().size == 1) {
+                        result += i
+                        break
+                    }
+                }
             }
         }
     }
