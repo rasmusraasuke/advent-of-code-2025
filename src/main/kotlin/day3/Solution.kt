@@ -1,22 +1,27 @@
 package day3
 
-fun solution(input: String): Int {
+fun solution(input: String): Long {
     val banks = input.split("\n")
-    var totalJoltage = 0
+    var totalJoltage: Long = 0
     for (bank in banks) {
-        val (fistBattery, index) = getMaxJoltage(bank)
-        val (secondBattery, _) = getMaxJoltage(bank, index + 1)
-        totalJoltage += "$fistBattery$secondBattery".toInt()
+        var bankJoltage = ""
+        var lastIndex = -1
+        for (i in 11 downTo 0) {
+            val (joltage, index) = getMaxJoltage(bank.substring(lastIndex + 1, bank.length - i))
+            bankJoltage += joltage
+            lastIndex += index + 1
+        }
+        totalJoltage += bankJoltage.toLong()
     }
     return totalJoltage
 }
 
-fun getMaxJoltage(bank: String, start: Int = 0): Pair<Int, Int> {
-    var maxJoltageIndex = start
+fun getMaxJoltage(bank: String): Pair<Int, Int> {
+    var maxJoltageIndex = 0
     var maxJoltage = bank[maxJoltageIndex].digitToInt()
-    for ((index, battery) in bank.substring(start).withIndex()) {
+    for ((index, battery) in bank.withIndex()) {
         val batteryJoltage = battery.digitToInt()
-        if (maxJoltage < batteryJoltage && (index != bank.length - 1 || start != 0)) {
+        if (maxJoltage < batteryJoltage) {
             maxJoltage = batteryJoltage
             maxJoltageIndex = index
         }
