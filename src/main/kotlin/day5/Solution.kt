@@ -1,9 +1,10 @@
 package day5
 
-fun solution(input: String): Int {
+import kotlin.math.max
+
+fun solution(input: String): Long {
     val parts = input.split(Regex("\\n\\s*\\n"))
     val ranges = parts[0].lines()
-    val ids = parts[1].lines().map { it.toLong() }
     val freshIds = mutableListOf<Pair<Long, Long>>()
 
     for (range in ranges) {
@@ -13,15 +14,22 @@ fun solution(input: String): Int {
         freshIds.add(Pair(start, end))
     }
 
-    var count = 0
-    for (id in ids) {
-        for ((start, end) in freshIds) {
-            if (id in start..end) {
-                count++
-                break
-            }
-        }
+    freshIds.sortWith(Comparator { a, b -> a.first.compareTo(b.first) })
+    val result = mutableListOf(freshIds[0])
+
+    for (cur in freshIds.subList(1, freshIds.size)) {
+       val last = result.last()
+       if (cur.first <= last.second) {
+           result[result.lastIndex] = last.first to max(last.second, cur.second)
+       } else {
+           result.add(cur)
+       }
     }
 
-    return count
+    var freshIdCount: Long = 0
+    for ((start, end) in result) {
+        freshIdCount += (end - start) + 1
+    }
+
+    return freshIdCount
 }
