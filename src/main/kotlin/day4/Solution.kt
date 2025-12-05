@@ -1,23 +1,28 @@
 package day4
 
 fun solution(input: String): Int {
-    val lines = input.split("\n")
-    val resultLines = lines.toMutableList()
-
+    val lines = input.split("\n").toMutableList()
     var accessibleRolls = 0
-    for ((y, line) in lines.withIndex()) {
-        for ((x, char) in line.withIndex()) {
-           if (char == '@') {
-               val count = countSurroundingRolls(lines, x to y)
-               if (count < 4) {
-                   resultLines[y] = resultLines[y].changeCharAt(x, 'x')
-                   accessibleRolls++
-               }
-           }
+
+    var changesHappened = true
+    while (changesHappened) {
+        changesHappened = false
+
+        for ((y, line) in lines.withIndex()) {
+            for ((x, char) in line.withIndex()) {
+                if (char == '@') {
+                    val count = countSurroundingRolls(lines, x to y)
+                    if (count < 4) {
+                        lines[y] = lines[y].changeCharAt(x, 'x')
+                        accessibleRolls++
+                        changesHappened = true
+                    }
+                }
+            }
         }
     }
 
-    printGrid(resultLines)
+    printGrid(lines)
     return accessibleRolls
 }
 
@@ -53,4 +58,6 @@ private fun printGrid(lines: List<String>) {
     for (line in lines) {
         println(line)
     }
+    println()
+    println()
 }
