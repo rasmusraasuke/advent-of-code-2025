@@ -25,9 +25,9 @@ fun solution(input: String): Long {
     }
 
     val sortedDistances = distances.sortedBy { it.distance }
-    val timesToConnect = 1000
     val circuits = mutableMapOf<Int, MutableList<Int>>()
-    for (dist in sortedDistances.take(timesToConnect)) {
+
+    for (dist in sortedDistances) {
         val box1 = dist.box1
         val box2 = dist.box2
         if (circuits.containsKey(box1) && circuits.containsKey(box2)) {
@@ -50,6 +50,8 @@ fun solution(input: String): Long {
             circuits[box1] = list
             circuits[box2] = list
         }
+
+        if (circuits[box1]!!.size == coords.size) return coords[box1].x.toLong() * coords[box2].x.toLong()
     }
-    return circuits.values.distinct().map { it.size.toLong() }.sortedDescending().take(3).reduce { acc, n -> acc * n }
+    return -1
 }
